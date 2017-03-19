@@ -12,9 +12,12 @@ namespace Fallout_Hacking_MiniGame
     {
         static void Main(string[] args)
         {
+
+
             //Enable1 dictionary https://github.com/dolph/dictionary/blob/master/enable1.txt
-            Console.WriteLine(AppDomain.CurrentDomain.BaseDirectory + "enable1.txt");
-         
+            //slowPrint(AppDomain.CurrentDomain.BaseDirectory + "enable1.txt");
+
+
             play(12, 6);
 
         }
@@ -26,8 +29,17 @@ namespace Fallout_Hacking_MiniGame
         //Choose words
         static ArrayList getWords()
         {
-            Console.WriteLine(@"Choose difficulty: Novice, Advanced, Expert, Master");
-            string diff = (Console.ReadLine()).ToLower();
+            slowPrint("Choose Terminal difficulty: Novice, Advanced, Expert, Master", 10);
+            bool passWord = false;
+
+            string diff = "";
+            while (!passWord)
+            {
+                diff = (Console.ReadLine()).ToLower();
+                if (diff.Equals("novice") || diff.Equals("advanced") || diff.Equals("expert") || diff.Equals("master")) { passWord = true; }
+                else { slowPrint("Invalid Selection!",5); }
+            }
+            
 
             StreamReader reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "enable1.txt");
 
@@ -88,7 +100,7 @@ namespace Fallout_Hacking_MiniGame
                     }
                 default:
                     {
-                        Console.WriteLine("Invalid, defaulting to novice");
+                        slowPrint("Invalid, defaulting to novice", 15);
                         while (!reader.EndOfStream)
                         {
                             string line = reader.ReadLine().TrimEnd();
@@ -108,16 +120,20 @@ namespace Fallout_Hacking_MiniGame
         {
             ArrayList writtenWords = new ArrayList();
             Random rnd = new Random();
-            int secretWordPos = rnd.Next(1,amount);
+            int secretWordPos = rnd.Next(1, amount);
 
-            for(int i = 0; i < amount; i++)
+            for (int i = 0; i < amount; i++)
             {
+
+                string fakeRegisterID = ("0x" + rnd.Next(0, 8192).ToString("X4"));
+                string fakeAffix = (char)(rnd.Next(35, 47)) + "";
+                string fakePrefix = (char)(rnd.Next(35, 47)) + "";
                 string nextWord = (words[rnd.Next(0, words.Count)] + "").ToUpper();
 
-                if (i == 0) { Console.WriteLine(nextWord); writtenWords.Add(nextWord.ToLower()); }
+                if (i == 0) { slowPrint(fakeRegisterID + " :  " + fakePrefix + nextWord + fakeAffix, 10); writtenWords.Add(nextWord.ToLower()); }
                 else if (i == secretWordPos)
                 {
-                    Console.WriteLine(secret.ToUpper());
+                    slowPrint(fakeRegisterID + " :  " + fakePrefix + secret.ToUpper() + fakeAffix, 10);
                     writtenWords.Add(secret.ToLower());
                 }
                 else
@@ -125,13 +141,9 @@ namespace Fallout_Hacking_MiniGame
                     foreach (string s in writtenWords)
                     {
 
-                        if (s.Equals(nextWord))
+                        if (!s.Equals(nextWord))
                         {
-
-                        }
-                        else
-                        {
-                            Console.WriteLine(nextWord);
+                            slowPrint(fakeRegisterID + " :  " + fakePrefix + nextWord + fakeAffix, 10);
                             break;
                         }
                     }
@@ -142,12 +154,17 @@ namespace Fallout_Hacking_MiniGame
             return writtenWords;
         }
 
-        static bool guess(string secret, ArrayList enabledWords) 
+        static bool guess(string secret, ArrayList enabledWords)
         {
-            Console.Write("> ");
-            string input = Console.ReadLine().ToLower();
-
-            if (!enabledWords.Contains(input) || secret.Length != input.Length) {Console.WriteLine("> Invalid input\n");  return false; }
+            string input = "";
+            bool passWord = false;
+            while (!passWord)
+            {
+                Console.Write("@>");
+                input = Console.ReadLine().ToLower();
+                if (!enabledWords.Contains(input) || secret.Length != input.Length) { slowPrint("> Invalid input", 5); passWord = false; }
+                else { passWord = true; }
+            }
 
             char[] secretA = secret.ToCharArray();
             char[] wordA = input.ToCharArray();
@@ -158,22 +175,19 @@ namespace Fallout_Hacking_MiniGame
                 {
                     score++;
                 }
-               
+
             }
 
-            
-            Console.WriteLine(score + "/" + secret.Length);
+
+            Console.WriteLine(score + "/" + secret.Length + " Correct");
             if (score == secret.Length)
             {
                 return true;
             }
             else
             {
-                
                 return false;
             }
-
-            
         }
 
 
@@ -187,12 +201,12 @@ namespace Fallout_Hacking_MiniGame
 
             while (true)
             {
-               
+
                 if (guess(secretWord, wordsPrinted))
                 {
                     terminalsHacked++;
-                    score += (int)(10* scoremult);
-                    Console.WriteLine("Correct!\nYou hacked: " + terminalsHacked + "\nYour Score: "+ score + "\n Keep Going?(Y)");
+                    score += (int)(10 * scoremult);
+                    slowPrint("Correct!\n--------------\nYou hacked: " + terminalsHacked + "\nYour Score: " + score + "\nKeep Going?(Y)", 15);
 
                     if (Console.ReadLine().ToLower().Equals("y"))
                     {
@@ -204,10 +218,10 @@ namespace Fallout_Hacking_MiniGame
                 else
                 {
                     tries--;
-                    Console.WriteLine("Tries Left "  + tries);
+                    slowPrint("Tries Left " + tries, 15);
                     if (tries == 0)
                     {
-                        Console.WriteLine("Failed!\n Play again?(Y)");
+                        slowPrint("Failed!\nPlay again?(Y)", 15);
 
                         if (Console.ReadLine().ToLower().Equals("y"))
                         {
@@ -217,13 +231,26 @@ namespace Fallout_Hacking_MiniGame
                         else { System.Environment.Exit(0); }
                     }
                 }
-
-                
             }
+        }
 
+        static void slowPrint(string line, int speed)
+        {
+            for (int i = -1; i < line.Length; i++)
+            {
+                Task.Delay(speed).Wait();
 
+                Task.Factory.StartNew(() =>
+                {
+                    if (i < line.Length)
+                    {
+                        Console.Write(line[i]);
+                    }
 
-            
+                });
+
+            }
+            Console.Write("\n");
         }
 
 
