@@ -17,7 +17,7 @@ namespace Fallout_Hacking_MiniGame
             //Enable1 dictionary https://github.com/dolph/dictionary/blob/master/enable1.txt
             //slowPrint(AppDomain.CurrentDomain.BaseDirectory + "enable1.txt");
 
-
+            slowPrint("Input 'help' for more information", 5);
             play(12, 6);
 
         }
@@ -37,9 +37,10 @@ namespace Fallout_Hacking_MiniGame
             {
                 diff = (Console.ReadLine()).ToLower();
                 if (diff.Equals("novice") || diff.Equals("advanced") || diff.Equals("expert") || diff.Equals("master")) { passWord = true; }
-                else { slowPrint("Invalid Selection!",5); }
+                else if (diff.Equals("help")) { slowPrint("This is a silly recration of the hacking minigame from fallout series.\nGame generates a random set of words with a secret word you are trying to guess\nIf you pick a wrong word game will show how close you are to secret word", 5); }
+                else { slowPrint("Invalid Selection!", 5); }
             }
-            
+
 
             StreamReader reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "enable1.txt");
 
@@ -179,7 +180,7 @@ namespace Fallout_Hacking_MiniGame
             }
 
 
-            Console.WriteLine(score + "/" + secret.Length + " Correct");
+            slowPrint(score + "/" + secret.Length + " Correct", 5);
             if (score == secret.Length)
             {
                 return true;
@@ -193,6 +194,8 @@ namespace Fallout_Hacking_MiniGame
 
         static void play(int amount, int tries)
         {
+
+
             ArrayList words = getWords();
             Random rnd = new Random();
             string secretWord = (string)words[rnd.Next(0, words.Count)];
@@ -206,14 +209,19 @@ namespace Fallout_Hacking_MiniGame
                 {
                     terminalsHacked++;
                     score += (int)(10 * scoremult);
-                    slowPrint("Correct!\n--------------\nYou hacked: " + terminalsHacked + "\nYour Score: " + score + "\nKeep Going?(Y)", 15);
+                    slowPrint("Correct!\n--------------\nYou hacked: " + terminalsHacked + "\nYour Score: " + score + "\nKeep Going?(Y/N)", 15);
 
-                    if (Console.ReadLine().ToLower().Equals("y"))
+                    while (true)
                     {
-                        tries = triesA;
-                        play(amount, tries);
+                        string c = Console.ReadLine().ToLower();
+                        if (c.Equals("y"))
+                        {
+                            tries = triesA;
+                            play(amount, tries);
+                        }
+                        else if (c.Equals("n")) { slowPrint("Shutting down......", 20); System.Environment.Exit(0); }
                     }
-                    else { System.Environment.Exit(0); }
+
                 }
                 else
                 {
@@ -221,14 +229,19 @@ namespace Fallout_Hacking_MiniGame
                     slowPrint("Tries Left " + tries, 15);
                     if (tries == 0)
                     {
-                        slowPrint("Failed!\nPlay again?(Y)", 15);
+                        slowPrint("Failed!\nPlay again?(Y/N)", 15);
 
-                        if (Console.ReadLine().ToLower().Equals("y"))
+                        while (true)
                         {
-                            tries = triesA;
-                            play(amount, tries);
+                            string c = Console.ReadLine().ToLower();
+                            if (c.Equals("y"))
+                            {
+                                score = 0;
+                                tries = triesA;
+                                play(amount, tries);
+                            }
+                            else if (c.Equals("n")) { slowPrint("Shutting down......",20); System.Environment.Exit(0); }
                         }
-                        else { System.Environment.Exit(0); }
                     }
                 }
             }
@@ -236,6 +249,9 @@ namespace Fallout_Hacking_MiniGame
 
         static void slowPrint(string line, int speed)
         {
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.DarkGreen;
+
             for (int i = -1; i < line.Length; i++)
             {
                 Task.Delay(speed).Wait();
@@ -251,6 +267,9 @@ namespace Fallout_Hacking_MiniGame
 
             }
             Console.Write("\n");
+
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.BackgroundColor = ConsoleColor.Black;
         }
 
 
