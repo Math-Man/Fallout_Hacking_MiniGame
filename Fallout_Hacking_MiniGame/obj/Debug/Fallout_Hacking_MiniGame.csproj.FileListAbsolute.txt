@@ -1,0 +1,6 @@
+c:\users\mathman\documents\visual studio 2015\Projects\Fallout_Hacking_MiniGame\Fallout_Hacking_MiniGame\bin\Debug\Fallout_Hacking_MiniGame.exe.config
+c:\users\mathman\documents\visual studio 2015\Projects\Fallout_Hacking_MiniGame\Fallout_Hacking_MiniGame\bin\Debug\Fallout_Hacking_MiniGame.exe
+c:\users\mathman\documents\visual studio 2015\Projects\Fallout_Hacking_MiniGame\Fallout_Hacking_MiniGame\bin\Debug\Fallout_Hacking_MiniGame.pdb
+c:\users\mathman\documents\visual studio 2015\Projects\Fallout_Hacking_MiniGame\Fallout_Hacking_MiniGame\obj\Debug\Fallout_Hacking_MiniGame.csprojResolveAssemblyReference.cache
+c:\users\mathman\documents\visual studio 2015\Projects\Fallout_Hacking_MiniGame\Fallout_Hacking_MiniGame\obj\Debug\Fallout_Hacking_MiniGame.exe
+c:\users\mathman\documents\visual studio 2015\Projects\Fallout_Hacking_MiniGame\Fallout_Hacking_MiniGame\obj\Debug\Fallout_Hacking_MiniGame.pdb
